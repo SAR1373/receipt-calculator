@@ -1,4 +1,16 @@
 <html>
 <head><title>Receipt Calculator</title></head>
-<body><h1>Coming Soon!</h1></body>
+<body>
+  <h1>Coming Soon!</h1>
+  <form>
+    <input type="file" accept="image/*" id="receiptUpload">
+    <button type="button" onclick="processReceipt()">Process Receipt</button>
+  </form>
+  <script>
+    function processReceipt() {
+      // Here’s where we’ll later add code to send the image to the OCR API
+      alert('Processing receipt...');
+    }
+  </script>
+</body>
 </html>
