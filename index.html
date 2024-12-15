@@ -1,16 +1,47 @@
 <html>
 <head><title>Receipt Calculator</title></head>
-<body>
+<body></body>
   <h1>Coming Soon!</h1>
   <form>
     <input type="file" accept="image/*" id="receiptUpload">
     <button type="button" onclick="processReceipt()">Process Receipt</button>
   </form>
   <script>
-    function processReceipt() {
-      // Here’s where we’ll later add code to send the image to the OCR API
-      alert('Processing receipt...');
+    async function processReceipt() {
+  const fileInput = document.getElementById('receiptUpload');
+  if (!fileInput.files || fileInput.files.length === 0) {
+    alert('Please choose an image first.');
+    return;
+  }
+
+  const file = fileInput.files[0];
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('apikey', 'YOUR_API_KEY_HERE'); // Replace YOUR_API_KEY_HERE with your real key
+  formData.append('language', 'eng');  // English text
+  formData.append('isOverlayRequired', 'false');
+
+  document.getElementById('result').innerText = 'Processing...';
+
+  try {
+    const response = await fetch('https://api.ocr.space/parse/image', {
+      method: 'POST',
+      body: formData
+    });
+
+    const json = await response.json();
+
+    if (json.IsErroredOnProcessing) {
+      document.getElementById('result').innerText = 'Error: ' + json.ErrorMessage[0];
+    } else {
+      const text = json.ParsedResults[0].ParsedText;
+      document.getElementById('result').innerText = 'Extracted Text:\n' + text;
     }
-  </script>
-</body>
+  } catch (error) {
+    document.getElementById('result').innerText = 'Error processing receipt: ' + error;
+  }
+}
+    <div id="result"></div>
+  </body>
 </html>
+
